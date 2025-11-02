@@ -24,7 +24,7 @@ def validate_task(ID):
 # CRUD Routes
 @tasks_bp.post("")
 def create_task():
-    # (try...except block) necessary to catch the KeyError when title or description is missing. 
+    # (try and except block) necessary to catch the KeyError when title or description is missing. 
     try:
         request_body = request.get_json()
 
