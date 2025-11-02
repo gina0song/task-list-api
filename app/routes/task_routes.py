@@ -5,17 +5,17 @@ from ..db import db
 tasks_bp = Blueprint('tasks', __name__, url_prefix='/tasks') 
 
 # Route Helper Method
-def validate_task(id):
+def validate_task(ID):
     try:
-        id = int(id)
+        ID = int(ID)
     except ValueError:
-        invalid = {"message": f"Task id ({id}) is invalid."}
+        invalid = {"message": f"Task ID ({ID}) is invalid."}
         abort(make_response(invalid, 400))
 
-    query = db.select(Task).where(Task.id == id)
+    query = db.select(Task).where(Task.id == ID)
     task = db.session.scalar(query)
     if not task:
-        not_found = {"message": f"Task with id ({id}) not found."}
+        not_found = {"message": f"Task with ID ({ID}) not found."}
         abort(make_response(not_found, 404))
 
     return task
@@ -37,11 +37,9 @@ def create_task():
 
         return jsonify(task_response), 201
     
-    except KeyError as e:
-        error_message = f"Bad Request: {e} is required."
-        return jsonify({"message": error_message}), 400
+    except KeyError:
+        return jsonify({"details": "Invalid data"}), 400
 
-    # Catches other errors
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         return jsonify({"message": "Internal Server Error"}), 500
@@ -61,4 +59,30 @@ def get_single_task(id):
     task = validate_task(id)
 
     return jsonify(task.to_dict()), 200
+
+@tasks_bp.put("/<id>")
+def update_task(id):
+    task = validate_task(id)
+
+    request_body = request.get_json()
+
+    if "title" in request_body:
+        task.title = request_body["title"]
+    
+    if "description" in request_body:
+        task.description = request_body["description"]
+
+    db.session.commit()
+
+    return "", 204
+
+@tasks_bp.delete("/<id>")
+def delete_task(id):
+    task = validate_task(id)
+
+    db.session.delete(task)
+    db.session.commit()
+
+    return "", 204
+
 
