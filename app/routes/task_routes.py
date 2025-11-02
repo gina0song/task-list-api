@@ -1,6 +1,7 @@
 from flask import Blueprint, make_response, request,abort, jsonify
 from ..models.task import Task
 from ..db import db
+from datetime import datetime
 
 tasks_bp = Blueprint('tasks', __name__, url_prefix='/tasks') 
 
@@ -49,7 +50,7 @@ def get_tasks():
     sort_by = request.args.get('sort')
     query = db.select(Task)
     all_tasks = db.session.scalars(query).all()
-    
+
     # Sort tasks if sort parameter is provided,"asc" for ascending and "desc" for descending
     if sort_by == 'asc':
         all_tasks.sort(key=lambda task: task.title, reverse=False)
@@ -67,6 +68,26 @@ def get_single_task(id):
 
     return jsonify(task.to_dict()), 200
 
+# Mark Task as Complete
+@tasks_bp.patch("/<id>/mark_complete")
+def mark_complete(id):
+    task = validate_task(id) 
+    task.completed_at = datetime.now()
+
+    db.session.commit()
+    
+    return make_response(jsonify({}), 204)
+
+# Mark Task as Incomplete
+@tasks_bp.patch("/<id>/mark_incomplete")
+def mark_incomplete(id):
+    task = validate_task(id)
+
+    task.completed_at = None
+
+    db.session.commit()
+
+    return make_response(jsonify({}), 204)
 
 
 @tasks_bp.put("/<id>")
