@@ -49,7 +49,8 @@ def get_tasks():
     sort_by = request.args.get('sort')
     query = db.select(Task)
     all_tasks = db.session.scalars(query).all()
-
+    
+    # Sort tasks if sort parameter is provided,"asc" for ascending and "desc" for descending
     if sort_by == 'asc':
         all_tasks.sort(key=lambda task: task.title, reverse=False)
     elif sort_by == 'desc':
@@ -58,7 +59,6 @@ def get_tasks():
     tasks_response = [task.to_dict() for task in all_tasks]
 
     return jsonify(tasks_response), 200
-
 
 
 @tasks_bp.get("/<id>")
