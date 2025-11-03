@@ -25,6 +25,9 @@ class Task(db.Model):
             "is_complete": self.completed_at is not None
             # "goal_id": self.goal_id
         }
+        if hasattr(self, 'goal_id') and self.goal_id is not None:
+            task_dict["goal_id"] = self.goal_id
+
         return task_dict
 
     # Class method to create Task instance from dictionary
