@@ -22,7 +22,7 @@ class Task(db.Model):
 
     # Class method to create Task instance from dictionary
     @classmethod
-    def from_dict(cls, data: dict):
+    def from_dict(cls, data):
 
         # Validation for 'title' and 'description': Raises KeyError if missing.
         
