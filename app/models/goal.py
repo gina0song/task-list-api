@@ -3,13 +3,17 @@ from ..db import db
 
 class Goal(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    title: Mapped[str] = mapped_column(nullable=False)
+    title:Mapped[str] = mapped_column(nullable=False)
 
-    def to_dict(self) -> dict:       
-        return {
+    def to_dict(self) :
+        goal_dict = {
             "id": self.id,
             "title": self.title
-        }                                   
+        }
+        return goal_dict
+
+
+
     @classmethod    
     def from_dict(cls, data):
         if 'title' not in data:
