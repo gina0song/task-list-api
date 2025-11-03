@@ -3,7 +3,7 @@ from app.db import db
 import pytest
 
 
-@pytest.mark.skip(reason="No way to test this feature yet")
+#@pytest.mark.skip(reason="No way to test this feature yet")
 def test_post_task_ids_to_goal(client, one_goal, three_tasks):
     # Act
     response = client.post("/goals/1/tasks", json={
@@ -51,13 +51,12 @@ def test_get_tasks_for_specific_goal_no_goal(client):
     response = client.get("/goals/1/tasks")
     response_body = response.get_json()
 
-    # Assert
     assert response.status_code == 404
+    assert "message" in response_body
+    assert response_body == {
+        "message": "Goal with ID (1) not found."
+    }
 
-    raise Exception("Complete test with assertion about response body")
-    # *****************************************************************
-    # **Complete test with assertion about response body***************
-    # *****************************************************************
 
 
 @pytest.mark.skip(reason="No way to test this feature yet")
