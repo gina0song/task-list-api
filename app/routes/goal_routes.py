@@ -84,3 +84,35 @@ def delete_goal(id):
     return jsonify({"details": f'Goal {goal.id} "{goal.title}" successfully deleted'}), 204
 
 
+
+
+@goals_bp.post("/<id>/tasks")
+def post_tasks_to_goal(id):
+    goal = validate_goal(id)
+    
+    request_body = request.get_json()
+    task_ids = request_body.get("task_ids", [])
+    
+    goal.tasks = []
+    
+    for task_id in task_ids:
+        task = validate_task(task_id)  
+        goal.tasks.append(task)
+    
+    db.session.commit()
+    
+    return jsonify({"id": goal.id, "task_ids": task_ids}), 200
+
+@goals_bp.get("/<id>/tasks")
+def get_tasks_for_goal(id):
+
+    goal = validate_goal(id)
+
+    response_body = goal.to_dict()
+    response_body.pop('task_ids', None) 
+
+    task_dicts = [task.to_dict() for task in goal.tasks]
+    
+    response_body["tasks"] = task_dicts
+
+    return make_response(response_body, 200)
