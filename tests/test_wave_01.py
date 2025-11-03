@@ -8,7 +8,7 @@ def test_task_to_dict():
     new_task = Task(id = 1, title="Make My Bed", 
                     description="Start the day off right!", 
                     completed_at=None)
-    
+        
     #Act
     task_dict = new_task.to_dict()
 
@@ -148,10 +148,8 @@ def test_get_task_not_found(client):
     # Assert
     assert response.status_code == 404
 
-    # raise Exception("Complete test with assertion about response body")
-    # # *****************************************************************
-    # # **Complete test with assertion about response body***************
-    # # *****************************************************************
+    assert "message" in response_body
+    assert response_body["message"] == "Task with ID (1) not found."
 
 
 def test_create_task(client):

@@ -17,5 +17,5 @@ def create_app(config=None):
     migrate.init_app(app, db)
 
     app.register_blueprint(tasks_bp)
-
+    
     return app
