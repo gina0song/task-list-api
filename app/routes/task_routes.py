@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response
 from ..models.task import Task
 from ..db import db
-from .route_utilities import validate_model, create_model, get_all_models, update_model, delete_model
+from .route_utilities import validate_model, create_model
 from datetime import datetime
 import os
 import requests
@@ -27,9 +27,7 @@ def create_task():
 @tasks_bp.get("")
 def get_tasks():
     sort_by = request.args.get('sort')
-    query = db.select(Task)
-    all_tasks = db.session.scalars(query).all()
-
+    
     # Sort tasks if sort parameter is provided,"asc" for ascending and "desc" for descending
     if sort_by == 'asc':
         query = db.select(Task).order_by(Task.title.asc())
@@ -74,7 +72,7 @@ def mark_complete(id):
             if response.status_code != 200:
                 print(f"Error sending Slack notification: {response.text}")
 
-    return make_response(jsonify({}), 204)
+    return jsonify(task.to_dict()), 204
 
 # Mark Task as Incomplete
 @tasks_bp.patch("/<id>/mark_incomplete")
