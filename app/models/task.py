@@ -24,7 +24,8 @@ class Task(db.Model):
             "description": self.description,
             "is_complete": self.completed_at is not None
         }
-        if hasattr(self, 'goal_id') and self.goal_id is not None:
+
+        if self.goal_id is not None:
             task_dict["goal_id"] = self.goal_id
 
         return task_dict
