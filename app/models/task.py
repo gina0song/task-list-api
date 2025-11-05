@@ -43,5 +43,6 @@ class Task(db.Model):
         return cls(
             title=data.get("title"),
             description=data.get("description"),
-            completed_at=data.get("completed_at")
+            completed_at=data.get("completed_at"),
+            goal_id=data.get("goal_id")
         )
