@@ -83,7 +83,7 @@ def mark_incomplete(id):
 
     db.session.commit()
 
-    return make_response(jsonify({}), 204)
+    return jsonify(task.to_dict()), 204
 
 
 @tasks_bp.put("/<id>")

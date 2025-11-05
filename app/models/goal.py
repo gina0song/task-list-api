@@ -6,11 +6,11 @@ class Goal(db.Model):
     title:Mapped[str] = mapped_column(nullable=False)
     tasks: Mapped[list["Task"]] = relationship(back_populates="goal")
 
+    # Convert Goal instance to dictionary
     def to_dict(self) :
         goal_dict = {
             "id": self.id,
             "title": self.title
-            # "tasks": [task.to_dict() for task in self.tasks]
         }
 
         if hasattr(self, 'tasks') and self.tasks:
@@ -19,7 +19,7 @@ class Goal(db.Model):
         return goal_dict
 
 
-
+    # Convert dictionary to Goal instance
     @classmethod    
     def from_dict(cls, data):
         if 'title' not in data:

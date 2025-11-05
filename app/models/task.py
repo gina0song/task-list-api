@@ -16,21 +16,20 @@ class Task(db.Model):
     goal: Mapped[Optional["Goal"]] = relationship(back_populates="tasks")
 
 
-    # Method to convert Task instance to dictionary
+    # Convert Task instance to dictionary
     def to_dict(self) :
         task_dict = {
             "id": self.id,
             "title": self.title,
             "description": self.description,
             "is_complete": self.completed_at is not None
-            # "goal_id": self.goal_id
         }
         if hasattr(self, 'goal_id') and self.goal_id is not None:
             task_dict["goal_id"] = self.goal_id
 
         return task_dict
 
-    # Class method to create Task instance from dictionary
+    # Convert dictionary to Task instance
     @classmethod
     def from_dict(cls, data):
 
